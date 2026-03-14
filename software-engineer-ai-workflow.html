@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>سافٹ ویئر انجینیئر کے لیے اے آئی ورک فلو</title>
+    <meta
+      name="description"
+      content="سافٹ ویئر انجینیئرز کے لیے ایک practical AI workflow: codebase سمجھنے، feature plan بنانے، code لکھنے، tests چلانے، review کرنے، اور بہتر طریقے سے ship کرنے کا مکمل اردو گائیڈ۔"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #ffffff;
+        --paper: #fcfbf8;
+        --ink: #172020;
+        --muted: #556260;
+        --line: rgba(13, 91, 82, 0.12);
+        --brand: #0d5b52;
+        --accent: #d39a2f;
+        --shadow: 0 18px 44px rgba(13, 91, 82, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "DM Sans", sans-serif;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .page {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 28px 20px 72px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        padding-bottom: 18px;
+        margin-bottom: 26px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-mark {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        background: var(--brand);
+        color: #fff8ed;
+        font-weight: 700;
+      }
+
+      .brand-copy {
+        display: grid;
+        gap: 2px;
+        text-align: right;
+      }
+
+      .brand-copy strong {
+        font-size: 1.05rem;
+      }
+
+      .brand-copy small,
+      .meta,
+      .lead,
+      .section-intro,
+      .links a,
+      .sources a,
+      .faq p {
+        color: var(--muted);
+      }
+
+      .crumb {
+        color: var(--brand);
+        font-size: 0.9rem;
+      }
+
+      .eyebrow {
+        color: var(--brand);
+        font-size: 0.92rem;
+        margin: 0 0 10px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        font-family: "Noto Nastaliq Urdu", serif;
+        font-weight: 600;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        line-height: 1.7;
+        margin-bottom: 12px;
+      }
+
+      h2 {
+        font-size: clamp(1.35rem, 2vw, 1.9rem);
+        line-height: 1.9;
+        color: var(--brand);
+        margin: 34px 0 8px;
+      }
+
+      h3 {
+        font-size: 1.05rem;
+        line-height: 1.9;
+        margin: 22px 0 6px;
+      }
+
+      p {
+        margin: 0 0 14px;
+        line-height: 2;
+        font-size: 1rem;
+      }
+
+      .lead {
+        font-size: 1.06rem;
+        line-height: 2.05;
+        margin-bottom: 10px;
+      }
+
+      .meta {
+        font-size: 0.96rem;
+        line-height: 1.95;
+      }
+
+      .hero-card,
+      .box,
+      pre {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+      }
+
+      .hero-card {
+        padding: 20px;
+      }
+
+      .box {
+        padding: 18px;
+        margin: 20px 0;
+      }
+
+      ul,
+      ol {
+        margin: 0 0 16px;
+        padding-right: 22px;
+      }
+
+      li {
+        margin-bottom: 8px;
+        line-height: 1.9;
+      }
+
+      pre {
+        padding: 16px;
+        overflow-x: auto;
+        direction: ltr;
+        text-align: left;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.92rem;
+        line-height: 1.7;
+        margin: 14px 0 20px;
+      }
+
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+
+      .section-intro {
+        margin-bottom: 8px;
+      }
+
+      .grid {
+        display: grid;
+        gap: 16px;
+      }
+
+      .faq {
+        border-top: 1px solid var(--line);
+        padding-top: 12px;
+      }
+
+      .links,
+      .sources {
+        padding-right: 20px;
+      }
+
+      .links a,
+      .sources a {
+        color: var(--brand);
+      }
+
+      @media (max-width: 640px) {
+        .page {
+          padding: 18px 14px 48px;
+        }
+
+        .topbar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="topbar">
+        <a class="brand" href="/index.html">
+          <span class="brand-mark">اے</span>
+          <span class="brand-copy">
+            <strong>urduai.in</strong>
+            <small>بھارت کے لیے اردو فرسٹ اے آئی پلیٹ فارم</small>
+          </span>
+        </a>
+        <span class="crumb">Guides / Developer Workflow</span>
+      </header>
+
+      <article>
+        <div class="hero-card">
+          <p class="eyebrow">Developer Workflow</p>
+          <h1>سافٹ ویئر انجینیئر کے لیے اے آئی ورک فلو</h1>
+          <p class="lead">codebase سمجھنے سے لے کر feature ship کرنے تک ایک practical اردو گائیڈ</p>
+          <p class="meta">
+            اگر آپ software engineer ہیں تو AI کو صرف code generator نہ سمجھیں۔ بہترین
+            workflow یہ ہے کہ AI کو planning، codebase understanding، implementation،
+            testing، review، اور handoff میں سوچ سمجھ کر استعمال کیا جائے۔
+          </p>
+        </div>
+
+        <section class="box">
+          <strong>اس صفحے میں آپ کیا سیکھیں گے:</strong>
+          <ul>
+            <li>AI کو software engineering workflow میں کہاں fit کرنا چاہیے</li>
+            <li>codebase understanding سے لے کر review تک practical process</li>
+            <li>prompts کیسے دیں تاکہ بہتر engineering output ملے</li>
+            <li>AI use کرتے وقت سب سے بڑی غلطیوں سے کیسے بچیں</li>
+          </ul>
+        </section>
+
+        <h2>یہ workflow کیوں اہم ہے؟</h2>
+        <p>
+          آج software engineering میں اصل challenge صرف code لکھنا نہیں رہا۔ اصل
+          challenge یہ ہے کہ codebase جلدی سمجھا جائے، context محفوظ رہے، feature safely
+          build ہو، regressions نہ آئیں، اور shipping speed بہتر ہو۔
+        </p>
+        <p>AI اگر صحیح طریقے سے استعمال کیا جائے تو یہ سب چیزیں بہتر کر سکتا ہے۔</p>
+
+        <h2>modern AI workflow کیا ہوتا ہے؟</h2>
+        <ol>
+          <li>مسئلہ واضح کریں</li>
+          <li>codebase سمجھیں</li>
+          <li>implementation plan بنائیں</li>
+          <li>code لکھیں یا refactor کریں</li>
+          <li>tests اور validation کریں</li>
+          <li>AI-assisted review کریں</li>
+          <li>documentation اور handoff مکمل کریں</li>
+        </ol>
+
+        <h2>1. مسئلہ واضح کریں</h2>
+        <p>AI سے vague prompt نہ دیں جیسے: <code>یہ feature بنا دو</code></p>
+        <p>اس کے بجائے مسئلہ واضح کریں:</p>
+        <ul>
+          <li>user issue کیا ہے؟</li>
+          <li>feature goal کیا ہے؟</li>
+          <li>success criteria کیا ہیں؟</li>
+          <li>کن files یا systems پر اثر پڑے گا؟</li>
+          <li>risks کیا ہیں؟</li>
+        </ul>
+
+        <h3>بہتر prompt کی مثال</h3>
+        <pre><code>ہمارے React + Node app میں profile edit flow inconsistent ہے۔
+مجھے implementation plan دو:
+- کون سی files دیکھنی چاہئیں
+- form state کہاں manage ہو رہی ہے
+- validation logic کہاں ہے
+- API update کہاں ہوگا
+- کون سے tests لکھنے ہوں گے
+- biggest rollout risks کیا ہیں</code></pre>
+
+        <h2>2. codebase AI سے سمجھیں</h2>
+        <p>
+          بڑے یا unfamiliar codebase میں engineer کا بہت وقت صرف context gather کرنے
+          میں چلا جاتا ہے۔ یہاں AI بہت useful ہو جاتا ہے۔
+        </p>
+        <p>آپ AI سے پوچھ سکتے ہیں:</p>
+        <ul>
+          <li>اس project کی architecture کیا ہے؟</li>
+          <li>auth flow کہاں defined ہے؟</li>
+          <li>user settings feature کس folder میں ہے؟</li>
+          <li>یہ bug reproduce کیوں ہو رہا ہو سکتا ہے؟</li>
+          <li>اس feature سے کون سے tests متاثر ہوں گے؟</li>
+        </ul>
+
+        <pre><code>اس codebase کو scan کرو اور simple summary دو:
+- project structure
+- main user flows
+- risky modules
+- testing strategy
+- profile settings feature کے entry points</code></pre>
+
+        <h2>3. implementation plan لو، پھر code لکھو</h2>
+        <p>
+          mature AI workflow میں engineer پہلے plan لیتا ہے، پھر code changes کرواتا
+          ہے۔ براہِ راست بڑا code dump لینا اکثر risky ہوتا ہے۔
+        </p>
+
+        <pre><code>اس existing component کو preserve کرتے ہوئے:
+- avatar upload
+- mobile number validation
+- save/loading states
+- optimistic UI
+add کرو۔
+پہلے step-by-step plan دو۔
+اس کے بعد code patches suggest کرو۔</code></pre>
+
+        <h2>4. AI کو pair programmer کی طرح استعمال کریں</h2>
+        <p>AI کو replacement کے طور پر نہیں بلکہ pair programmer کے طور پر استعمال کریں۔</p>
+        <p>Best use cases:</p>
+        <ul>
+          <li>boilerplate</li>
+          <li>repetitive CRUD code</li>
+          <li>validation helpers</li>
+          <li>tests</li>
+          <li>refactors</li>
+          <li>utility extraction</li>
+          <li>documentation updates</li>
+        </ul>
+
+        <h2>5. parallel work اور background agents استعمال کریں</h2>
+        <p>
+          strong AI workflow میں ایک ہی chat window پر سب کچھ نہیں ہوتا۔ اگر tool
+          support ہو تو parallel work بہت useful ہوتا ہے۔
+        </p>
+        <ul>
+          <li>ایک agent codebase summary کرے</li>
+          <li>دوسرا test plan بنائے</li>
+          <li>تیسرا feature implementation explore کرے</li>
+          <li>چوتھا bug review کرے</li>
+        </ul>
+
+        <h2>6. tests اور validation لازمی ہیں</h2>
+        <p>AI-generated code کو blind trust کرنا سب سے dangerous غلطی ہے۔</p>
+        <p>ہر meaningful change کے بعد یہ ضرور کریں:</p>
+        <ul>
+          <li>unit tests</li>
+          <li>integration tests</li>
+          <li>type checks</li>
+          <li>lint</li>
+          <li>manual smoke test</li>
+          <li>edge case review</li>
+        </ul>
+
+        <pre><code>اس feature کے لیے:
+- unit test cases
+- integration risks
+- edge cases
+- regression checklist
+بناؤ۔</code></pre>
+
+        <h2>7. AI سے code review بھی لو</h2>
+        <p>
+          AI صرف code لکھنے کے لیے useful نہیں، code review کے لیے بھی بہت useful ہے۔
+        </p>
+        <p>Review prompts:</p>
+        <ul>
+          <li>اس diff میں bugs تلاش کرو</li>
+          <li>hidden regressions کہاں ہو سکتے ہیں؟</li>
+          <li>missing tests کیا ہیں؟</li>
+          <li>performance issue ہو سکتا ہے؟</li>
+          <li>unsafe assumptions کیا ہیں؟</li>
+        </ul>
+
+        <pre><code>یہ PR review کرو۔
+خاص طور پر دیکھو:
+- state bugs
+- API contract mismatches
+- security issues
+- missing tests
+- performance regressions</code></pre>
+
+        <h2>8. documentation اور handoff بہتر کرو</h2>
+        <p>
+          بہت سے engineers code تو لکھ دیتے ہیں مگر handoff خراب ہوتا ہے۔ AI اس area میں
+          بہت مددگار ہے۔
+        </p>
+        <ul>
+          <li>PR summary</li>
+          <li>changelog draft</li>
+          <li>QA checklist</li>
+          <li>release notes</li>
+          <li>internal documentation update</li>
+        </ul>
+
+        <pre><code>اس feature کے لیے concise PR summary لکھو:
+- کیا بدلا
+- کیوں بدلا
+- risks کیا ہیں
+- QA کیسے کرے</code></pre>
+
+        <h2>بہترین tool mix کیا ہو سکتا ہے؟</h2>
+
+        <h3>Claude Code</h3>
+        <p>بڑے codebase، multi-file work، terminal workflows، اور deeper reasoning tasks کے لیے useful۔</p>
+
+        <h3>Cursor</h3>
+        <p>IDE-centered editing، inline changes، اور background workflows کے لیے اچھا option۔</p>
+
+        <h3>Codex / coding agents</h3>
+        <p>
+          scoped engineering tasks، code edits، repo understanding، اور structured
+          execution کے لیے useful ہو سکتے ہیں۔
+        </p>
+
+        <h2>عام غلطیاں</h2>
+        <ul>
+          <li>AI کو magic سمجھنا</li>
+          <li>context دیے بغیر output مانگنا</li>
+          <li>testing skip کرنا</li>
+          <li>giant vague prompts دینا</li>
+          <li>AI output کو final سمجھ لینا</li>
+        </ul>
+
+        <h2>ideal short workflow</h2>
+        <ol>
+          <li>مسئلہ define کرو</li>
+          <li>AI سے codebase map کرو</li>
+          <li>implementation plan لو</li>
+          <li>scoped code لکھواؤ</li>
+          <li>tests لکھو اور چلاؤ</li>
+          <li>AI review لو</li>
+          <li>manual judgment سے approve کرو</li>
+          <li>documentation complete کرو</li>
+          <li>ship کرو اور monitor کرو</li>
+        </ol>
+
+        <h2>خلاصہ</h2>
+        <p>
+          AI کا بہترین استعمال “میرے لیے code لکھ دو” نہیں ہے۔ AI کا بہترین استعمال یہ
+          ہے کہ اسے اپنے engineering system کا حصہ بنایا جائے۔
+        </p>
+        <p>
+          صحیح workflow میں AI آپ کی مدد کرتا ہے:
+        </p>
+        <ul>
+          <li>سمجھنے میں</li>
+          <li>plan بنانے میں</li>
+          <li>code لکھنے میں</li>
+          <li>tests بنانے میں</li>
+          <li>review کرنے میں</li>
+          <li>handoff بہتر کرنے میں</li>
+        </ul>
+
+        <h2>FAQ</h2>
+        <div class="grid">
+          <div class="faq">
+            <h3>کیا AI-generated code production میں استعمال ہو سکتا ہے؟</h3>
+            <p>ہاں، مگر صرف review، testing، اور validation کے بعد۔</p>
+          </div>
+          <div class="faq">
+            <h3>سب سے پہلے کون سا use case adopt کرنا چاہیے؟</h3>
+            <p>Codebase explanation، test generation، PR summary، اور repetitive feature work۔</p>
+          </div>
+          <div class="faq">
+            <h3>کیا AI junior کے لیے زیادہ useful ہے یا senior کے لیے؟</h3>
+            <p>دونوں کے لیے، مگر فائدہ مختلف ہے۔</p>
+          </div>
+          <div class="faq">
+            <h3>biggest risk کیا ہے؟</h3>
+            <p>Blind trust۔</p>
+          </div>
+          <div class="faq">
+            <h3>کیا ایک engineer کو ایک ہی tool استعمال کرنا چاہیے؟</h3>
+            <p>ضروری نہیں۔ کئی teams مختلف stages کے لیے مختلف tools use کرتی ہیں۔</p>
+          </div>
+        </div>
+
+        <h2>Related Reading</h2>
+        <ul class="links">
+          <li><a href="/what-is-chatgpt.html">چیٹ جی پی ٹی کیا ہے؟</a></li>
+          <li><a href="/gemini-tool.html">Gemini کیا ہے؟</a></li>
+          <li><a href="/free-tools.html">بہترین مفت اے آئی ٹولز</a></li>
+          <li><a href="/students-guide.html">طلبہ کے لیے اے آئی</a></li>
+          <li><a href="/freelancers-guide.html">فری لانسرز کے لیے اے آئی</a></li>
+        </ul>
+
+        <h2>Sources</h2>
+        <ul class="sources">
+          <li><a href="https://www.anthropic.com/claude-code">Anthropic Claude Code</a></li>
+          <li><a href="https://docs.cursor.com/background-agents">Cursor Background Agents</a></li>
+          <li><a href="https://openai.com/index/introducing-codex/">OpenAI Codex</a></li>
+        </ul>
+      </article>
+    </main>
+  </body>
+</html>
