@@ -768,6 +768,7 @@ function renderHomePage(page) {
               <span>PROJECT</span>
             </div>
             <p class="eyebrow">${page.kicker}</p>
+            <p class="hero-project-kicker">This is an Urdu AI Project</p>
             <h1>${page.headline}</h1>
             <p class="summary">${page.summary}</p>
             <div class="hero-actions">
