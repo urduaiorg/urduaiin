@@ -762,6 +762,11 @@ function renderHomePage(page) {
       <main>
         <section class="hero hero-home">
           <div class="hero-copy">
+            <div class="hero-project-banner" aria-hidden="true">
+              <span>THIS IS</span>
+              <span>AN URDU AI</span>
+              <span>PROJECT</span>
+            </div>
             <p class="eyebrow">${page.kicker}</p>
             <h1>${page.headline}</h1>
             <p class="summary">${page.summary}</p>

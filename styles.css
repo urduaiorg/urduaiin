@@ -195,6 +195,29 @@ a {
   gap: 12px;
 }
 
+.hero-copy {
+  position: relative;
+}
+
+.hero-project-banner {
+  margin: 0 0 18px;
+  display: grid;
+  gap: 2px;
+  direction: ltr;
+  text-align: left;
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(2.8rem, 8.5vw, 7.4rem);
+  line-height: 0.88;
+  letter-spacing: -0.08em;
+  font-weight: 700;
+  color: rgba(13, 91, 82, 0.18);
+  text-transform: uppercase;
+}
+
+.hero-project-banner span:last-child {
+  color: var(--bg-deep);
+}
+
 .hero-copy h1,
 .section-head h2 {
   margin: 0;
@@ -767,6 +790,10 @@ a {
   .hero-copy h1,
   .section-head h2 {
     max-width: none;
+  }
+
+  .hero-project-banner {
+    font-size: clamp(2.2rem, 12vw, 4.2rem);
   }
 }
 
